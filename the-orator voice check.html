@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>The Orator</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=EB+Garamond:wght@400;500&display=swap">
+<style>
+:root{--bg:#1c1618;--panel:#2a1a1f;--line:#5a4630;--gold:#c9a45c;--ink:#ece3d2;--mute:#a3978a;--burg:#5b1f2b;--ok:#7fa870;--key:#c9a45c;--pay:#c47a6b;--dep:#8a9bb5;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+:root:not([data-theme="dark"]){color-scheme:dark}
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:radial-gradient(ellipse at top,#2e1a20 0,var(--bg) 60%) fixed;color:var(--ink);font:18px/1.55 'EB Garamond',Georgia,serif}
+h1,h2,h3{font-family:'Cormorant Garamond',Georgia,serif;font-weight:600;margin:0}
+header{padding:22px 18px 8px;text-align:center;border-bottom:1px solid var(--line)}
+header h1{font-size:2.4rem;letter-spacing:.28em;color:var(--gold)}
+header p{margin:2px 0 10px;font-style:italic;color:var(--mute)}
+nav{display:flex;gap:6px;overflow-x:auto;padding:10px 12px;border-bottom:1px solid var(--line);position:sticky;top:env(safe-area-inset-top,0px);background:var(--bg);z-index:5}
+nav button{flex:none;background:none;border:1px solid transparent;color:var(--mute);font:inherit;padding:8px 14px;border-radius:2px;cursor:pointer}
+nav button[aria-current=true]{color:var(--gold);border-color:var(--gold);background:var(--burg)}
+main{max-width:860px;margin:0 auto;padding:20px 16px 60px}
+section{display:none}section.on{display:block}
+h2{font-size:1.9rem;color:var(--gold);margin-bottom:6px}
+.sub{color:var(--mute);margin:0 0 16px}
+label{display:block;margin:14px 0 4px;color:var(--gold)}
+input,textarea,select{width:100%;background:#150f11;color:var(--ink);border:1px solid var(--line);padding:10px;font:inherit;border-radius:2px}
+textarea{min-height:220px;resize:vertical}
+.btn{background:var(--burg);color:var(--ink);border:1px solid var(--gold);padding:11px 20px;font:inherit;cursor:pointer;margin:12px 8px 0 0;border-radius:2px}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn.ghost{background:none;border-color:var(--line)}
+.row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+.steps{list-style:none;padding:0;margin:0}
+.steps li{display:flex;justify-content:space-between;gap:10px;padding:11px 0;border-bottom:1px solid var(--line)}
+.tag{font-size:.82rem;padding:2px 9px;border:1px solid;border-radius:20px;white-space:nowrap;align-self:center}
+.t-ok{color:var(--ok)}.t-key{color:var(--key)}.t-pay{color:var(--pay)}.t-dep{color:var(--dep)}
+.card{border:1px solid var(--line);background:var(--panel);padding:14px 16px;margin:10px 0}
+.note{border-left:3px solid var(--gold);padding:6px 12px;color:var(--mute);margin:14px 0}
+.count{color:var(--mute);font-size:.9rem;text-align:right}
+.proj{display:flex;justify-content:space-between;align-items:center;gap:8px}
+h3{font-size:1.35rem;margin-top:22px;color:var(--ink)}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{background:none;border:1px solid var(--line);color:var(--mute);font:inherit;padding:8px 14px;border-radius:20px;cursor:pointer}
+.chip[aria-pressed=true]{background:var(--burg);color:var(--gold);border-color:var(--gold)}
+details{margin:14px 0;border:1px solid var(--line);padding:10px 12px}summary{cursor:pointer;color:var(--gold)}
+.demo{border-color:var(--pay)}.live{border-color:var(--ok)}
+.badge{display:inline-block;margin:0 0 8px;padding:2px 10px;border:1px solid var(--pay);color:var(--pay);border-radius:20px;font-size:.85rem}
+.sec textarea{min-height:150px}
+@media (prefers-reduced-motion:no-preference){section.on{animation:f .25s ease}@keyframes f{from{opacity:0}to{opacity:1}}}
+</style>
+</head>
+<body>
+<header><h1>THE ORATOR</h1><p>From written chapter to philosophical documentary</p></header>
+<nav id="nav"></nav>
+<main>
+
+<section id="new">
+<h2>New Project</h2><p class="sub">Name your documentary. Everything after this is saved to it.</p>
+<label for="pname">Project name</label><input id="pname" placeholder="e.g. Meditations, Book II">
+<label for="pstyle">Narrator preset</label>
+<select id="pstyle"><option>Renaissance Orator</option><option>Medieval Philosopher</option><option>Historical Documentary Narrator</option><option>Dark Intellectual</option></select>
+<button class="btn" id="create">Create project</button>
+<div class="note">Guided sequence: Source, Script, Approve, Voice, Storyboard, Visuals, Assemble, Preview, Export. Costly steps will always ask your approval first.</div>
+<ul class="steps" id="steps"></ul>
+</section>
+
+<section id="script">
+<h2>Script Studio</h2><p class="sub">Paste your chapter. AI rewriting arrives in Stage 2.</p>
+<label for="src">Source text</label><textarea id="src" placeholder="Paste a chapter or passage here…"></textarea>
+<div class="count" id="cnt">0 words</div>
+<label>Upload TXT</label><input type="file" id="file" accept=".txt,text/plain">
+<div class="note">PDF and DOCX reading needs the server, added later. TXT works now.</div>
+<button class="btn" id="save">Save source</button>
+<div class="card" id="modebar"></div>
+<h3>Writing style</h3>
+<label for="gpreset">Narrator preset</label><select id="gpreset"></select>
+<p class="sub" id="gdesc"></p>
+<label>Emphasis (tap to switch on or off)</label><div class="chips" id="chips"></div>
+<label for="glen">Narration length (how much of each section is kept)</label><select id="glen"><option value="shorter">Shorter</option><option value="standard">Standard</option><option value="longer">Longer</option></select>
+<label for="gsize">Section size (how your chapter is split)</label><select id="gsize"><option value="250">Small (about 250 words)</option><option value="350">Medium (about 350 words)</option><option value="500">Large (about 500 words)</option></select>
+<details><summary>Connection (leave empty for demo mode)</summary>
+<label for="gserver">Server address</label><input id="gserver" placeholder="Added in a later stage" inputmode="url" autocapitalize="off">
+<p class="sub">When you have a server, paste its address here. No rebuild is needed.</p></details>
+<button class="btn" id="gen">Generate script</button>
+<div class="count" id="gprog"></div>
+<h3>Narration script</h3>
+<div id="gout"></div>
+<div class="count" id="gtotal"></div>
+<button class="btn" id="approve" disabled>Approve script</button>
+<div class="note" id="gstate" hidden></div>
+</section>
+
+<section id="voice"><h2>Voice Studio</h2><p class="sub">Narration by Kokoro, generated by a service you connect.</p>
+<div class="card demo" id="vmode"></div>
+<details id="vconn"><summary>Kokoro service connection</summary>
+<label for="vurl">Service address</label><input id="vurl" placeholder="https://yourname-kokoro-tts.hf.space" inputmode="url" autocapitalize="off" autocomplete="off">
+<label for="vgpu">Hardware (Hugging Face Space only)</label><select id="vgpu"><option value="0">CPU (no daily quota, slower)</option><option value="1">ZeroGPU (faster, uses daily quota)</option></select>
+<button class="btn ghost" id="vsaveurl">Save and test connection</button>
+<p class="sub">Paste your public Space address or any Kokoro service address. It is saved only on this device. No keys are stored in this page. A config.js file next to this page can also set it.</p></details>
+<h3>Voice</h3>
+<label for="vvoice">Voice</label><select id="vvoice"></select>
+<label for="vspeed">Speed: <span id="vsv"></span></label><input type="range" id="vspeed" min="0.8" max="1.2" step="0.05" value="1">
+<label for="vpause">Pause between paragraphs: <span id="vpav"></span> s</label><input type="range" id="vpause" min="0" max="2" step="0.1" value="0.6">
+<h3>Script</h3>
+<label for="vscript">Narration script</label><textarea id="vscript" placeholder="Paste a complete narration script, or import a TXT file."></textarea>
+<div class="count" id="vcount"></div>
+<button class="btn ghost" id="vuse">Use approved project script</button><button class="btn ghost" id="vimp">Import TXT</button><input type="file" id="vfile" accept=".txt,text/plain" hidden>
+<div><button class="btn" id="vgen">Generate narration</button><button class="btn ghost" id="vcancel" hidden>Cancel</button></div>
+<progress id="vprog" value="0" max="1" hidden style="width:100%;margin-top:12px"></progress>
+<div class="count" id="vstat"></div>
+<div class="note" id="verr" hidden></div>
+<audio id="vaudio" controls hidden style="width:100%;margin-top:14px"></audio>
+<div id="vdl" hidden><button class="btn ghost" id="vwav">Download WAV</button><button class="btn ghost" id="vmp3">Download MP3</button></div>
+<div class="note">Kokoro runs on your own service, not in this browser. This tablet only sends text and receives audio.</div></section>
+
+<section id="visual"><h2>Visual Studio</h2><p class="sub">Met Museum, National Gallery of Art, Wikimedia Commons, plus AI images.</p>
+<div class="note">Not connected. Museum searches are free but need the Stage 4 server. AI images need a paid key.</div></section>
+
+<section id="story"><h2>Storyboard</h2><p class="sub">Scenes, artwork, camera moves and transitions, all editable.</p>
+<div class="note">Not built yet. Arrives in Stage 5, after the script and voice exist.</div></section>
+
+<section id="editor"><h2>Video Editor</h2><p class="sub">Reorder scenes, swap images, set music levels and ducking.</p>
+<div class="note">Not built yet. Needs the FFmpeg cloud server (Stage 6).</div></section>
+
+<section id="export"><h2>Export and Downloads</h2><p class="sub">MP4, H.264, 30 fps, 720p or 1080p.</p>
+<label for="res">Resolution</label><select id="res"><option>1080p</option><option>720p</option></select>
+<button class="btn" disabled>Start cloud render</button>
+<div class="note">Cloud rendering is a paid service and will always ask your confirmation first.</div></section>
+
+<section id="lib"><h2>Project Library</h2><p class="sub">Saved on this device.</p><div id="plist"></div></section>
+
+<section id="set"><h2>Settings</h2><p class="sub">API keys never go here. They live on the server.</p>
+<div class="card">Voice needs a Kokoro service you host. Keys needed later: AI text model, AI image model, Supabase, cloud host.</div>
+<button class="btn ghost" id="wipe">Clear all saved projects on this device</button></section>
+
+<section id="status">
+<h2>Build status</h2>
+<ul class="steps">
+<li><span>Dashboard, navigation, projects, TXT paste</span><span class="tag t-ok">working now</span></li>
+<li><span>Script rewriting, PDF/DOCX reading</span><span class="tag t-key">needs AI key + server</span></li>
+<li><span>Kokoro voice (WAV and MP3)</span><span class="tag t-dep">interface built, no service connected</span></li>
+<li><span>Museum artwork search</span><span class="tag t-dep">needs server</span></li>
+<li><span>AI images</span><span class="tag t-pay">needs paid key</span></li>
+<li><span>FFmpeg rendering and MP4</span><span class="tag t-dep">needs cloud server</span></li>
+</ul></section>
+</main>
+<script>
+const S=[["new","New Project"],["script","Script Studio"],["voice","Voice Studio"],["visual","Visual Studio"],["story","Storyboard"],["editor","Video Editor"],["export","Export"],["lib","Library"],["set","Settings"],["status","Status"]];
+const $=id=>document.getElementById(id);
+let db={projects:[],cur:null};
+try{db=JSON.parse(localStorage.getItem("orator")||'{"projects":[],"cur":null}')}catch(e){}
+let warned=false;function persist(){try{localStorage.setItem("orator",JSON.stringify(db))}catch(e){if(!warned){warned=true;alert("This browser blocked saving. Your work will be lost when you close the page.")}}}
+function go(id){document.querySelectorAll("section").forEach(s=>s.classList.toggle("on",s.id===id));
+document.querySelectorAll("#nav button").forEach(b=>b.setAttribute("aria-current",b.dataset.id===id));
+if(id==="lib")lib();location.hash=id}
+$("nav").innerHTML=S.map(s=>`<button data-id="${s[0]}">${s[1]}</button>`).join("");
+$("nav").onclick=e=>{if(e.target.dataset.id)go(e.target.dataset.id)};
+const STEPS=["Upload source material","Generate narration script","Review and approve script","Generate voiceover","Generate storyboard","Retrieve paintings, make missing images","Assemble video","Preview documentary","Export MP4"];
+function cur(){return db.projects.find(p=>p.id===db.cur)}
+function steps(){const p=cur();$("steps").innerHTML=STEPS.map((t,i)=>`<li><span>${i+1}. ${t}</span><span class="tag ${p&&i===0&&p.src?'t-ok':'t-dep'}">${p&&i===0&&p.src?'done':'waiting'}</span></li>`).join("")}
+$("create").onclick=()=>{const n=$("pname").value.trim();if(!n){alert("Enter a project name first.");return}
+const p={id:Date.now(),name:n,style:$("pstyle").value,src:""};db.projects.push(p);db.cur=p.id;persist();steps();go("script")};
+function wc(){const w=$("src").value.trim().split(/\s+/).filter(Boolean).length;$("cnt").textContent=w+" words"}
+$("src").oninput=()=>{wc();const p=cur();if(p){p.src=$("src").value;persist()}};
+$("file").onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{$("src").value=r.result;$("src").oninput()};r.readAsText(f)};
+$("save").onclick=()=>{const p=cur();if(!p){alert("Create a project first.");go("new");return}p.src=$("src").value;persist();steps();alert("Source saved to “"+p.name+"”.")};
+function lib(){$("plist").innerHTML=db.projects.length?db.projects.map(p=>`<div class="card proj"><div><h3>${p.name.replace(/</g,"&lt;")}</h3><span class="sub">${p.style}, ${p.src.split(/\s+/).filter(Boolean).length} words, ${p.script?p.script.length+" sections, "+(p.approved?"approved":"not approved")+(p.script.some(s=>s.demo)?" (demo)":""):"no script yet"}</span></div><button class="btn ghost" data-open="${p.id}">Open</button></div>`).join(""):"<p>No projects yet. Create one under New Project.</p>"}
+$("plist").onclick=e=>{const id=e.target.dataset.open;if(id){db.cur=+id;persist();$("src").value=cur().src;wc();steps();go("script")}};
+$("wipe").onclick=()=>{if(confirm("Delete all projects on this device?")){db={projects:[],cur:null};persist();steps();lib()}};
+/* ===== Stage 2: script generation =====
+Server contract (for later): POST {server}/api/script with JSON
+{preset, style_prompt, length, tones[], text, section, of} -> reply {text}. */
+const PRESETS={"Renaissance Orator":"A refined orator of the Renaissance: measured, eloquent, rich in vocabulary, with restrained theatrical flourish.","Medieval Philosopher":"A scholastic voice: precise, reasoned, weighing arguments step by step with sober gravity.","Historical Documentary Narrator":"A calm, authoritative documentary voice: clear, warm, well paced.","Dark Intellectual":"A brooding, incisive voice: sharp, reflective, quietly intense."};
+const TONES=["More philosophical","More literary","More dramatic","More conversational"];
+let gs={preset:"Renaissance Orator",length:"standard",tones:[],size:"350",server:""};
+try{Object.assign(gs,JSON.parse(localStorage.getItem("orator_gs")||"{}"))}catch(e){}
+function gsave(){try{localStorage.setItem("orator_gs",JSON.stringify(gs))}catch(e){}}
+const words=t=>t.trim().split(/\s+/).filter(Boolean).length;
+function pieces(p,n){if(words(p)<=n)return [p];const s=p.match(/[^.!?]+[.!?]*\s*/g)||[p],out=[];let c="",k=0;const flush=()=>{if(c.trim())out.push(c.trim());c="";k=0};for(const x of s){const w=words(x);if(w>n){flush();const a=x.trim().split(/\s+/);for(let i=0;i<a.length;i+=n)out.push(a.slice(i,i+n).join(" "));continue}if(k&&k+w>n)flush();c+=x;k+=w}flush();return out}
+function chunks(t,n){let ps=t.split(/\n\s*\n/);if(ps.length<2)ps=t.split(/\n/);ps=ps.map(s=>s.trim()).filter(Boolean).flatMap(p=>pieces(p,n));const out=[];let c="",k=0;for(const p of ps){const w=words(p);if(k&&k+w>n){out.push(c);c="";k=0}c+=(c?"\n\n":"")+p;k+=w}if(c)out.push(c);return out}
+function mock(t){const keep={shorter:.6,standard:.85,longer:1}[gs.length];return "[DEMO PLACEHOLDER: not AI-written, not in the Orator style]\n\n"+t.split(/\n\s*\n/).map(p=>{const s=p.match(/[^.!?]+[.!?]+/g)||[p];return s.slice(0,Math.max(1,Math.ceil(s.length*keep))).join(" ").trim()}).join("\n\n[pause]\n\n")}
+async function call(t,i,n){const r=await fetch(gs.server.replace(/\/$/,"")+"/api/script",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({preset:gs.preset,style_prompt:PRESETS[gs.preset],length:gs.length,tones:gs.tones,text:t,section:i+1,of:n})});if(!r.ok)throw new Error("Server replied "+r.status);return (await r.json()).text}
+const gen1=(t,i,n)=>gs.server?call(t,i,n):Promise.resolve(mock(t));
+function modebar(){const m=$("modebar");m.className="card "+(gs.server?"live":"demo");m.textContent=gs.server?"Live mode: sending text to "+gs.server+" (not yet tested).":"Demo mode: placeholder text only. No AI is being used."}
+function ginit(){$("gpreset").innerHTML=Object.keys(PRESETS).map(k=>`<option>${k}</option>`).join("");$("gpreset").value=gs.preset;$("gdesc").textContent=PRESETS[gs.preset];$("glen").value=gs.length;$("gsize").value=gs.size;$("gserver").value=gs.server;
+$("chips").innerHTML=TONES.map(t=>`<button class="chip" aria-pressed="${gs.tones.includes(t)}">${t}</button>`).join("");modebar()}
+$("gpreset").onchange=e=>{gs.preset=e.target.value;$("gdesc").textContent=PRESETS[gs.preset];gsave()};
+$("glen").onchange=e=>{gs.length=e.target.value;gsave()};
+$("gsize").onchange=e=>{gs.size=e.target.value;gsave()};
+$("gserver").onchange=e=>{gs.server=e.target.value.trim();gsave();modebar()};
+$("chips").onclick=e=>{const t=e.target.textContent;if(!TONES.includes(t))return;gs.tones=gs.tones.includes(t)?gs.tones.filter(x=>x!==t):[...gs.tones,t];gsave();e.target.setAttribute("aria-pressed",gs.tones.includes(t))};
+function gtotal(){const p=cur();if(!p||!p.script){$("gtotal").textContent="";$("approve").disabled=true;$("approve").textContent="Approve script";$("gstate").hidden=true;return}const w=p.script.reduce((a,s)=>a+words(s.out),0);$("gtotal").textContent=w+" words, about "+Math.max(1,Math.round(w/150))+" min spoken";$("approve").disabled=!p.script.length;$("approve").textContent=p.approved?"Approved":"Approve script";const st=$("gstate");st.hidden=!p.approved;st.textContent=p.script.some(s=>s.demo)?"Approved, but this is demo placeholder text. Generate with real AI before voicing it.":"Approved. This script is ready for voice generation. Edit any section to withdraw approval."}
+function renderScript(){const p=cur(),o=$("gout");o.innerHTML="";if(!p){o.innerHTML="<p class='sub'>Create a project first (New Project).</p>";gtotal();return}
+if(!p.script||!p.script.length){o.innerHTML="<p class='sub'>Nothing yet. Paste text above, then tap Generate script.</p>";gtotal();return}
+p.script.forEach((s,i)=>{const d=document.createElement("div");d.className="card sec";d.innerHTML=`<h3>Section ${i+1} of ${p.script.length}</h3>${s.demo?'<p class="badge">Demo placeholder: not AI-written</p>':''}<textarea></textarea><div class="row"><button class="btn ghost">Regenerate section</button><span class="count"></span></div>`;const ta=d.querySelector("textarea"),ct=d.querySelector(".count");ta.value=s.out;ct.textContent=words(s.out)+" words";
+ta.oninput=()=>{s.out=ta.value;p.approved=false;ct.textContent=words(s.out)+" words";persist();gtotal()};
+d.querySelector("button").onclick=async e=>{e.target.disabled=true;try{s.out=await gen1(s.src,i,p.script.length);s.demo=!gs.server;p.approved=false;persist();renderScript()}catch(x){alert("Could not regenerate: "+x.message)}e.target.disabled=false};
+o.appendChild(d)});gtotal()}
+$("gen").onclick=async()=>{const p=cur();if(!p){alert("Create a project first.");go("new");return}const t=$("src").value.trim();if(!t){alert("Paste some source text first.");return}
+if(gs.server&&!confirm("This sends your text to the server and may cost money. Continue?"))return;
+p.src=t;const cs=chunks(t,+gs.size),res=[];$("gen").disabled=true;
+try{for(let i=0;i<cs.length;i++){$("gprog").textContent="Working on section "+(i+1)+" of "+cs.length+"…";res.push({src:cs[i],out:await gen1(cs[i],i,cs.length),demo:!gs.server})}p.script=res;p.approved=false;p.settings={...gs};persist();$("gprog").textContent="Done: "+res.length+" sections of about "+gs.size+" words each."+(gs.server?"":" These are demo placeholders.");renderScript()}catch(x){$("gprog").textContent="Stopped: "+x.message+". Check the server address in Connection."}
+$("gen").disabled=false};
+$("approve").onclick=()=>{const p=cur();if(p&&p.script){p.approved=true;persist();gtotal()}};
+/* ===== Stage 3: Kokoro service adapter and Voice Studio ===== */
+/*TTS-START*/
+const TTS=(()=>{const K="orator_tts_url";let saved="",kind=null,ep="",pre="",pars=[];try{saved=localStorage.getItem(K)||""}catch(e){}
+const u=()=>(window.ORATOR_TTS_URL||saved||"").trim().replace(/\/+$/,"");
+const guard=()=>{if(!u())throw new Error("The Kokoro service is not configured.");if(location.protocol==="https:"&&/^http:\/\//i.test(u())&&!/\/\/(localhost|127\.)/i.test(u()))throw new Error("This page is https, so the service address must also start with https.")};
+const blocked=[];try{document.addEventListener("securitypolicyviolation",e=>blocked.push(String(e.blockedURI||"")))}catch(x){}
+const net=async e=>{if(e.name==="AbortError")throw e;if(e instanceof TypeError){await new Promise(r=>setTimeout(r,60));let h="";try{h=new URL(u()).host}catch(x){}if(h&&blocked.some(b=>b.includes(h)))throw new Error("This page's own security policy blocked the request. That happens inside the Claude preview, which does not allow outside connections. Host THE ORATOR on your own web address (for example GitHub Pages) and test again.");throw new Error("The request failed before any reply. The address may be wrong, the Space may be asleep or offline, or it may not allow browser requests from this page (CORS).")}throw e};
+async function detect(){guard();kind=null;
+ try{
+  for(const p of ["/gradio_api",""]){
+   let j=null;try{const r=await fetch(u()+p+"/info");j=JSON.parse(await r.text())}catch(e){if(e instanceof TypeError)throw e;continue}
+   if(j&&j.named_endpoints!==undefined){const eps=j.named_endpoints,n=Object.keys(eps).find(x=>/generate_first/.test(x))||Object.keys(eps).find(x=>/^\/generate$/.test(x));if(!n)throw new Error("This Space has no open generate endpoint. If it is the official Hexgrad Space, its API is closed on purpose.");kind="gradio";pre=p;ep=n;pars=eps[n].parameters||[];return kind}
+  }
+  try{const r=await fetch(u()+"/v1/audio/voices");if(!r.ok)throw new Error("The service replied "+r.status+".");await r.json();kind="openai";return kind}
+  catch(e){if(e instanceof TypeError)throw e;throw new Error(/\.hf\.space/i.test(u())?"The Space did not answer with an API. It may be asleep: open its page once, wait a minute, then test again.":e.message)}
+ }catch(e){await net(e)}
+}
+return{get url(){return u()},get kind(){return kind},configured:()=>!!u(),save(v){saved=v.trim();kind=null;try{localStorage.setItem(K,saved)}catch(e){}},
+async voices(){await detect();return[kind]},
+async speak(text,voice,speed,signal,gpu){guard();if(!kind)await detect();
+ try{
+  let b;
+  if(kind==="openai"){const r=await fetch(u()+"/v1/audio/speech",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({model:"kokoro",input:text,voice,speed,response_format:"wav"}),signal});if(!r.ok)throw new Error("The service replied "+r.status+".");b=await r.arrayBuffer()}
+  else{
+   const val=p=>{const k=(p.parameter_name||p.label||"").toLowerCase();if(k==="text")return text;if(k==="voice")return voice;if(k==="speed")return speed;if(/gpu/.test(k))return !!gpu;return p.parameter_has_default?p.parameter_default:null};
+   const r=await fetch(u()+pre+"/call"+ep,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({data:pars.map(val)}),signal});
+   const j=await r.json().catch(()=>({}));if(!j.event_id)throw new Error("The Space refused the request.");
+   const s=await(await fetch(u()+pre+"/call"+ep+"/"+j.event_id,{signal})).text(),m=s.match(/event: complete\s*\ndata: (.*)/);
+   if(!m)throw new Error(/quota/i.test(s)?"The Space daily GPU quota is used up. Choose CPU hardware or wait.":"The Space could not generate this section.");
+   const f=JSON.parse(m[1]).find(x=>x&&typeof x==="object"&&(x.url||x.path));if(!f)throw new Error("The Space returned no audio.");
+   const a=await fetch(f.url||(u()+pre+"/file="+f.path),{signal});if(!a.ok)throw new Error("Could not download the audio ("+a.status+").");b=await a.arrayBuffer()}
+  if(b.byteLength<2000)throw new Error("The service did not return audio.");return b
+ }catch(e){await net(e)}}}})();
+/*TTS-END*/
+/*PCM-START*/
+function chunk(t,max){const s=t.replace(/\s+/g," ").match(/[^.!?;:]+[.!?;:]*\s*/g)||[t],out=[];let c="";const push=x=>{if(x.trim())out.push(x.trim())};for(const x of s){if(x.length>max){push(c);c="";let y="";for(const k of x.trim().split(" ")){if(y&&(y+" "+k).length>max){push(y);y=""}y+=(y?" ":"")+k}push(y);continue}if(c&&(c+x).length>max){push(c);c=""}c+=x}push(c);return out}
+function plan(text,max){max=max||600;const out=[],ps=text.replace(/\r/g,"").split(/\n\s*\n/).map(s=>s.trim()).filter(Boolean);ps.forEach((p,pi)=>{const sg=p.split(/\[pause\]/i).map(s=>s.trim()).filter(Boolean);sg.forEach((g,si)=>{const cs=chunk(g,max);cs.forEach((c,ci)=>{out.push({t:c,gap:ci<cs.length-1?"s":si<sg.length-1?"m":pi<ps.length-1?"p":""})})})});return out}
+async function toPCM(buf){const v=new DataView(buf);try{if(v.getUint32(0)!==0x52494646)throw 0;let o=12,fmt=null;while(o+8<=buf.byteLength){const id=v.getUint32(o),sz=v.getUint32(o+4,true);if(id===0x666d7420){fmt={tag:v.getUint16(o+8,true),ch:v.getUint16(o+10,true),sr:v.getUint32(o+12,true),bits:v.getUint16(o+22,true)}}else if(id===0x64617461){if(!fmt||fmt.tag!==1||fmt.bits!==16||fmt.ch!==1)throw 0;const len=Math.min(sz,buf.byteLength-o-8)&~1;return{sr:fmt.sr,pcm:new Int16Array(buf.slice(o+8,o+8+len))}}o+=8+sz+(sz&1)}throw 0}catch(e){const ac=new(window.AudioContext||window.webkitAudioContext)(),b=await ac.decodeAudioData(buf.slice(0));if(ac.close)ac.close();const f=b.getChannelData(0),p=new Int16Array(f.length);for(let i=0;i<f.length;i++)p[i]=Math.max(-1,Math.min(1,f[i]))*32767;return{sr:b.sampleRate,pcm:p}}}
+function wav16(p,sr){const n=p.length,b=new ArrayBuffer(44+n*2),d=new DataView(b),w=(o,s)=>{for(let i=0;i<s.length;i++)d.setUint8(o+i,s.charCodeAt(i))};w(0,"RIFF");d.setUint32(4,36+n*2,true);w(8,"WAVEfmt ");d.setUint32(16,16,true);d.setUint16(20,1,true);d.setUint16(22,1,true);d.setUint32(24,sr,true);d.setUint32(28,sr*2,true);d.setUint16(32,2,true);d.setUint16(34,16,true);w(36,"data");d.setUint32(40,n*2,true);new Int16Array(b,44).set(p);return new Blob([b],{type:"audio/wav"})}
+/*PCM-END*/
+async function mp316(p,sr){if(!window.lamejs)await new Promise((ok,no)=>{const s=document.createElement("script");s.src="https://cdnjs.cloudflare.com/ajax/libs/lamejs/1.2.1/lame.min.js";s.onload=ok;s.onerror=()=>no(new Error("The MP3 encoder did not load. Use WAV instead."));document.head.appendChild(s)});const e=new lamejs.Mp3Encoder(1,sr,128),out=[];for(let i=0;i<p.length;i+=1152){const c=e.encodeBuffer(p.subarray(i,i+1152));if(c.length)out.push(c);if(i%(1152*400)===0)await new Promise(r=>setTimeout(r))}const l=e.flush();if(l.length)out.push(l);return new Blob(out,{type:"audio/mpeg"})}
+const VOICES=[["bm_lewis","Lewis, British male (default)"],["bm_george","George, British male"],["bm_fable","Fable, British male"],["bm_daniel","Daniel, British male"]];
+const GAP={s:.15,m:.8};
+let ctl=null,vout=null,tested=null;const vcache=new Map();
+$("vvoice").innerHTML=VOICES.map(v=>`<option value="${v[0]}">${v[1]}</option>`).join("");$("vvoice").value="bm_lewis";
+function vshow(){const s=+$("vspeed").value;$("vsv").textContent=s.toFixed(2)+"x"+(s===1?" (normal)":"");$("vpav").textContent=$("vpause").value}
+function vcount(){const w=words($("vscript").value);$("vcount").textContent=w+" words, about "+Math.max(1,Math.round(w/150))+" min spoken"}
+function vmode(){const m=$("vmode");let t,c="demo";if(!TTS.configured())t="Kokoro service is not configured. Add a service address under Kokoro service connection. Nothing can be generated until then.";else if(tested===true){c="live";t="Connected and verified with a real test sentence: "+(TTS.kind==="gradio"?"Hugging Face Space (Gradio).":"Kokoro service.")}else if(tested)t="Service problem: "+tested;else t="Service address saved but not tested. Tap Save and test connection.";m.className="card "+c;m.textContent=t;$("vgen").disabled=!TTS.configured()||!!ctl}
+async function vtest(){tested=null;vmode();$("vstat").textContent="Testing connection with a real test sentence\u2026";try{await TTS.voices();const b=await TTS.speak("Hello.",$("vvoice").value,1,undefined,$("vgpu").value==="1"),r=await toPCM(b);if(!r.pcm.length)throw new Error("The test audio was empty.");tested=true}catch(e){tested=e.message}$("vstat").textContent="";vmode()}
+function showErr(t){const e=$("verr");e.textContent=t;e.hidden=!t}
+$("vsaveurl").onclick=()=>{TTS.save($("vurl").value);vtest()};
+["vspeed","vpause"].forEach(i=>$(i).oninput=vshow);
+$("vscript").oninput=()=>{vcount();const p=cur();if(p){p.narr=$("vscript").value;persist()}};
+$("vimp").onclick=()=>$("vfile").click();
+$("vfile").onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{$("vscript").value=r.result;$("vscript").oninput()};r.readAsText(f)};
+$("vuse").onclick=()=>{const p=cur();if(!p||!p.script||!p.approved){alert("Approve a script for this project in Script Studio first.");return}if(p.script.some(s=>s.demo)){alert("That script is a demo placeholder and cannot be narrated.");return}$("vscript").value=p.script.map(s=>s.out).join("\n\n");$("vscript").oninput()};
+$("vcancel").onclick=()=>ctl&&ctl.abort();
+function vsave(b,ext){const a=document.createElement("a");a.href=URL.createObjectURL(b);a.download=((cur()||{}).name||"narration").replace(/\W+/g,"-")+"."+ext;a.click()}
+$("vwav").onclick=()=>vout&&vsave(wav16(vout.pcm,vout.sr),"wav");
+$("vmp3").onclick=async()=>{if(!vout)return;$("vstat").textContent="Encoding MP3\u2026";try{vsave(await mp316(vout.pcm,vout.sr),"mp3");$("vstat").textContent="MP3 ready."}catch(e){showErr(e.message)}};
+$("vgen").onclick=async()=>{const text=$("vscript").value.trim();showErr("");if(!text){showErr("Paste or import a script first.");return}
+const voice=$("vvoice").value,speed=+$("vspeed").value,pp=+$("vpause").value,items=plan(text,TTS.kind==="openai"?600:350),parts=[];let i=0,sr=0;
+ctl=new AbortController();$("vcancel").hidden=false;$("vprog").hidden=false;$("vprog").max=items.length;$("vprog").value=0;$("vaudio").hidden=true;$("vdl").hidden=true;vmode();
+try{for(i=0;i<items.length;i++){$("vstat").textContent="Generating section "+(i+1)+" of "+items.length+"\u2026";const key=voice+"|"+speed+"|"+items[i].t;let r=vcache.get(key);
+if(!r){let b;for(let a=0;;a++){try{b=await TTS.speak(items[i].t,voice,speed,ctl.signal,$("vgpu").value==="1");break}catch(e){if(e.name==="AbortError"||a>=1)throw e}}r=await toPCM(b);vcache.set(key,r)}
+if(sr&&r.sr!==sr)throw new Error("The service returned a different sample rate.");sr=r.sr;parts.push(r.pcm);const g=items[i].gap,gs=g==="p"?pp:GAP[g]||0;if(gs)parts.push(new Int16Array(Math.round(gs*sr)));$("vprog").value=i+1}
+const n=parts.reduce((a,p)=>a+p.length,0),all=new Int16Array(n);let o=0;for(const p of parts){all.set(p,o);o+=p.length}
+vout={pcm:all,sr};const au=$("vaudio");if(au.src)URL.revokeObjectURL(au.src);au.src=URL.createObjectURL(wav16(all,sr));au.hidden=false;$("vdl").hidden=false;
+$("vstat").textContent="Done: "+(n/sr/60).toFixed(1)+" minutes of narration from "+items.length+" sections."}
+catch(e){if(e.name==="AbortError")$("vstat").textContent="Cancelled. Finished sections are kept, so Generate continues where it stopped.";else{$("vstat").textContent="";showErr("Stopped at section "+(i+1)+" of "+items.length+": "+e.message+" Finished sections are kept; tap Generate to continue.")}}
+ctl=null;$("vcancel").hidden=true;$("vprog").hidden=true;vmode()};
+function renderVoice(){const p=cur();if(p&&typeof p.narr==="string")$("vscript").value=p.narr;$("vurl").value=TTS.url;vshow();vcount();vmode()}
+{const s=document.createElement("script");s.src="config.js";s.onload=()=>renderVoice();s.onerror=()=>{};document.head.appendChild(s)}
+vshow();vcount();vmode();
+const _go=go;go=function(id){_go(id);if(id==="script")renderScript();if(id==="voice")renderVoice()};
+ginit();
+if(cur())$("src").value=cur().src;wc();steps();
+go(S.some(s=>s[0]===location.hash.slice(1))?location.hash.slice(1):"new");
+</script>
+</body>
+</html>
